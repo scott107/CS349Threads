@@ -2,7 +2,6 @@ import java.util.Random;
 
 public class ThreadsAndStuff {
 	private static int x,y,z;
-	private volatile static int testing = 0;
 	public static void f() {
 		x = x + 1;
 		y = y + 1;
@@ -72,14 +71,14 @@ public class ThreadsAndStuff {
 		
 		// Part 3
 		/*
-		Thread BadThread = new Thread(codestuffhalfashardbutsynchronized);
-		Thread WorseThread = new Thread(codestuffhalfashardbutsynchronized);
+		Thread BoredThread = new Thread(codestuffhalfashardbutsynchronized);
+		Thread LazyThread = new Thread(codestuffhalfashardbutsynchronized);
 		long startTime = System.nanoTime();
-		BadThread.start();
-		WorseThread.start();
+		BoredThread.start();
+		LazyThread.start();
 		
-		BadThread.join();
-		WorseThread.join();
+		BoredThread.join();
+		LazyThread.join();
 		
 		long endTime = System.nanoTime();
 		System.out.println("Computation took " + ((endTime - startTime) / 1000000) + " milliseconds");
@@ -91,7 +90,6 @@ public class ThreadsAndStuff {
 		int[][] matrix = new int[10][10000000]; // if you run out of memory during execution, reduce the second dimension
 		int[] summs = new int[matrix.length];
 		Random rand = new Random();
-
 		// Initialize matrix with random numbers
 		for (int x = 0; x < matrix.length; x++) {
 		    for (int y = 0; y < matrix[x].length; y++) {
@@ -112,7 +110,6 @@ public class ThreadsAndStuff {
 		System.out.println("Computation took " + ((endTime - startTime) / 1000000) + " milliseconds");
 		// multiple threads
 		Thread arrayofThreads[] = new Thread[matrix.length];
-		Thread arrayofThreads2[] = new Thread[matrix.length];
 	    class workfaster implements Runnable{
 	    	private int x;
 	    	workfaster(int xx){
@@ -124,30 +121,11 @@ public class ThreadsAndStuff {
 	    		for (int y = 0; y < matrix[x].length; y++) {
 	    			sec = sec + (int)Math.log(matrix[x][y]);
 	    		}
-	    		
 	    		addit(x,sec);
 	    	}
+	    	
 	    	public void addit(int x, int sec){
 	    		summs[x] = sec;
-	    	}
-	    };
-	    
-	    class workfaster2 implements Runnable{
-	    	private int x;
-	    	workfaster2(int xx){
-	    		x = xx;
-	    	}
-	    	
-	    	public void run(){
-	    		int sec = 0;
-	    		for (int y = 0; y < matrix[x].length; y++) {
-	    			sec = sec + (int)Math.log(matrix[x][y]);
-	    		}
-	    		
-	    		addit(sec);
-	    	}
-	    	public synchronized void addit(int x){
-	    		testing+=x;
 	    	}
 	    };
 	    
@@ -163,29 +141,13 @@ public class ThreadsAndStuff {
 		    current = arrayofThreads[i];
 		    current.join();
 		}
-		int secondcount = 0;
+		int multisum = 0;
 		for (int i = 0; i < matrix.length; i++){
-			secondcount = secondcount + summs[i];
+			multisum = multisum + summs[i];
 		}
 		
 		endTime = System.nanoTime();
-		System.out.println("Multiple thread sum:  " + secondcount);
-		System.out.println("Computation took " + ((endTime - startTime) / 1000000) + " milliseconds");
-		
-		startTime = System.nanoTime();
-		sum = 0;
-		for (int x = 0; x < matrix.length; x++) {
-			arrayofThreads2[x] = new Thread(new workfaster2(x));
-			arrayofThreads2[x].start();
-		}
-		
-		for (int i = 0; i < matrix.length; i++){
-		    current = arrayofThreads2[i];
-		    current.join();
-		}
-		
-		endTime = System.nanoTime();
-		System.out.println("Multiple thread2 sum:  " + testing);
+		System.out.println("Multiple thread sum:  " + multisum);
 		System.out.println("Computation took " + ((endTime - startTime) / 1000000) + " milliseconds");
 	}
 
